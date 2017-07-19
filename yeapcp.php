@@ -1,0 +1,218 @@
+<?php
+
+require_once 'yeapcp.civix.php';
+
+/**
+ * Implements hook_civicrm_buildForm().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_buildForm
+ */
+function yeapcp_civicrm_pageRun(&$page) {
+  $pageName = $page->getVar('_name');
+  if ($pageName == 'CRM_PCP_Page_PCPInfo') {
+    // Modify styles for thermometer background images.
+    $resources = CRM_Core_Resources::singleton();
+    $remain_bg_url = $resources->getUrl('org.yea.yeapcp', 'img/maroon.gif');
+    $achieve_bg_url = $resources->getUrl('org.yea.yeapcp', 'img/gold.gif');
+    $css = "
+      #crm-container .thermometer-fill-wrapper {
+        background: transparent url({$remain_bg_url}) repeat-y scroll left bottom;
+      }
+
+      #crm-container .thermometer-fill {
+        background: transparent url({$achieve_bg_url}) repeat-y scroll 0 bottom;
+      }
+    ";
+    $resources->addStyle($css);
+  
+    // Get ID of parent contribution page (in 4.6, api Pcp.get doesn't exist, so
+    // use BAO).
+    $bao = new CRM_PCP_BAO_PCP();
+    $bao->id = $page->_id;
+    $bao->find();
+    $bao->fetch();
+    $parent_page_id = $bao->page_id;
+    
+    // Inject parent Introductory Message above PCP intro text.	
+    $tpl = CRM_Core_Smarty::singleton();
+    $pcp = $tpl->_tpl_vars['pcp'];
+    $pcp['intro_text'] = _yeapcp_get_intro_text($parent_page_id) . $pcp['intro_text'];
+    $page->assign('pcp', $pcp);
+  }
+}
+
+/**
+ * Implements hook_civicrm_buildForm().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_buildForm
+ */
+function yeapcp_civicrm_buildForm($formName, $form) {
+  if ($formName == 'CRM_Contribute_Form_Contribution_Main' && !empty($form->_pcpId)) {
+    // Inject parent Introductory Message above PCP intro text.	
+    $tpl = CRM_Core_Smarty::singleton();
+    $intro_text = $tpl->_tpl_vars['intro_text'];
+    $intro_text = _yeapcp_get_intro_text($form->_id) . $intro_text;
+    $form->assign('intro_text', $intro_text);
+  }
+}
+
+/**
+ * Implements hook_civicrm_config().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
+ */
+function yeapcp_civicrm_config(&$config) {
+  _yeapcp_civix_civicrm_config($config);
+}
+
+/**
+ * Implements hook_civicrm_xmlMenu().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_xmlMenu
+ */
+function yeapcp_civicrm_xmlMenu(&$files) {
+  _yeapcp_civix_civicrm_xmlMenu($files);
+}
+
+/**
+ * Implements hook_civicrm_install().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_install
+ */
+function yeapcp_civicrm_install() {
+  _yeapcp_civix_civicrm_install();
+}
+
+/**
+ * Implements hook_civicrm_postInstall().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_postInstall
+ */
+function yeapcp_civicrm_postInstall() {
+  _yeapcp_civix_civicrm_postInstall();
+}
+
+/**
+ * Implements hook_civicrm_uninstall().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_uninstall
+ */
+function yeapcp_civicrm_uninstall() {
+  _yeapcp_civix_civicrm_uninstall();
+}
+
+/**
+ * Implements hook_civicrm_enable().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_enable
+ */
+function yeapcp_civicrm_enable() {
+  _yeapcp_civix_civicrm_enable();
+}
+
+/**
+ * Implements hook_civicrm_disable().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_disable
+ */
+function yeapcp_civicrm_disable() {
+  _yeapcp_civix_civicrm_disable();
+}
+
+/**
+ * Implements hook_civicrm_upgrade().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
+ */
+function yeapcp_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
+  return _yeapcp_civix_civicrm_upgrade($op, $queue);
+}
+
+/**
+ * Implements hook_civicrm_managed().
+ *
+ * Generate a list of entities to create/deactivate/delete when this module
+ * is installed, disabled, uninstalled.
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_managed
+ */
+function yeapcp_civicrm_managed(&$entities) {
+  _yeapcp_civix_civicrm_managed($entities);
+}
+
+/**
+ * Implements hook_civicrm_caseTypes().
+ *
+ * Generate a list of case-types.
+ *
+ * Note: This hook only runs in CiviCRM 4.4+.
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_caseTypes
+ */
+function yeapcp_civicrm_caseTypes(&$caseTypes) {
+  _yeapcp_civix_civicrm_caseTypes($caseTypes);
+}
+
+/**
+ * Implements hook_civicrm_angularModules().
+ *
+ * Generate a list of Angular modules.
+ *
+ * Note: This hook only runs in CiviCRM 4.5+. It may
+ * use features only available in v4.6+.
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_angularModules
+ */
+function yeapcp_civicrm_angularModules(&$angularModules) {
+  _yeapcp_civix_civicrm_angularModules($angularModules);
+}
+
+/**
+ * Implements hook_civicrm_alterSettingsFolders().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_alterSettingsFolders
+ */
+function yeapcp_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
+  _yeapcp_civix_civicrm_alterSettingsFolders($metaDataFolders);
+}
+
+// --- Functions below this ship commented out. Uncomment as required. ---
+
+/**
+ * Implements hook_civicrm_preProcess().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_preProcess
+ *
+function yeapcp_civicrm_preProcess($formName, &$form) {
+
+} // */
+
+/**
+ * Implements hook_civicrm_navigationMenu().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
+ *
+function yeapcp_civicrm_navigationMenu(&$menu) {
+  _yeapcp_civix_insert_navigation_menu($menu, NULL, array(
+    'label' => ts('The Page', array('domain' => 'org.yea.yeapcp')),
+    'name' => 'the_page',
+    'url' => 'civicrm/the-page',
+    'permission' => 'access CiviReport,access CiviContribute',
+    'operator' => 'OR',
+    'separator' => 0,
+  ));
+  _yeapcp_civix_navigationMenu($menu);
+} // */
+
+
+function _yeapcp_get_intro_text($page_id) {
+  // Retrieve Introductory Message from parent contribution page. We'll inject
+  // this into the PCP page below.
+  $result = civicrm_api3('ContributionPage', 'get', array(
+    'sequential' => 1,
+    'return' => "intro_text",
+    'id' => $page_id,
+  ));    
+  $parent_intro_text = $result['values'][0]['intro_text'];
+  return $parent_intro_text;
+}
