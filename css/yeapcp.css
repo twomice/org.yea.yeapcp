@@ -16,3 +16,8 @@ and open the template in the editor.
 #crm-container .thermometer-fill {
   background: transparent url('../img/gold.gif') repeat-y scroll 0 bottom;
 }
+
+/* Hide "Create your own fundraising page" link ('.pcp-create-your-own') */
+#crm-container div.campaign div.pcp-create-your-own {
+  display: none;
+}
