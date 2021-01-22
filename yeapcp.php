@@ -10,20 +10,8 @@ require_once 'yeapcp.civix.php';
 function yeapcp_civicrm_pageRun(&$page) {
   $pageName = $page->getVar('_name');
   if ($pageName == 'CRM_PCP_Page_PCPInfo') {
-    // Modify styles for thermometer background images.
-    $resources = CRM_Core_Resources::singleton();
-    $remain_bg_url = $resources->getUrl('org.yea.yeapcp', 'img/maroon.gif');
-    $achieve_bg_url = $resources->getUrl('org.yea.yeapcp', 'img/gold.gif');
-    $css = "
-      #crm-container .thermometer-fill-wrapper {
-        background: transparent url({$remain_bg_url}) repeat-y scroll left bottom;
-      }
-
-      #crm-container .thermometer-fill {
-        background: transparent url({$achieve_bg_url}) repeat-y scroll 0 bottom;
-      }
-    ";
-    $resources->addStyle($css);
+    // Inject custom CSS for PCP pages.
+    CRM_Core_Resources::singleton()->addStyleFile('org.yea.yeapcp', 'css/yeapcp.css');
   
     // Get ID of parent contribution page (in 4.6, api Pcp.get doesn't exist, so
     // use BAO).

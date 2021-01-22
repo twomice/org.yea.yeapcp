@@ -8,10 +8,11 @@ and open the template in the editor.
     Author     : as
 */
 
+
 #crm-container .thermometer-fill-wrapper {
-  background: transparent url("../i/contribute/pcp_remain.gif") repeat-y scroll left bottom;
+  background: transparent url('../img/maroon.gif') repeat-y scroll left bottom;
 }
 
 #crm-container .thermometer-fill {
-  background: transparent url(../i/contribute/pcp_achieve.gif) repeat-y scroll 0 bottom;
+  background: transparent url('../img/gold.gif') repeat-y scroll 0 bottom;
 }
