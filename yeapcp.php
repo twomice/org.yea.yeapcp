@@ -12,6 +12,7 @@ function yeapcp_civicrm_pageRun(&$page) {
   if ($pageName == 'CRM_PCP_Page_PCPInfo') {
     // Inject custom CSS for PCP pages.
     CRM_Core_Resources::singleton()->addStyleFile('org.yea.yeapcp', 'css/yeapcp.css');
+    CRM_Core_Resources::singleton()->addScriptFile('org.yea.yeapcp', 'js/yeapcp.js');
   
     // Get ID of parent contribution page (in 4.6, api Pcp.get doesn't exist, so
     // use BAO).
