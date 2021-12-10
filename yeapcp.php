@@ -13,7 +13,7 @@ function yeapcp_civicrm_pageRun(&$page) {
     // Inject custom CSS for PCP pages.
     CRM_Core_Resources::singleton()->addStyleFile('org.yea.yeapcp', 'css/yeapcp.css');
     CRM_Core_Resources::singleton()->addScriptFile('org.yea.yeapcp', 'js/yeapcp.js');
-  
+
     // Get ID of parent contribution page (in 4.6, api Pcp.get doesn't exist, so
     // use BAO).
     $bao = new CRM_PCP_BAO_PCP();
@@ -22,8 +22,8 @@ function yeapcp_civicrm_pageRun(&$page) {
     $bao->fetch();
     $parent_page_id = $bao->page_id;
     $pcpTitleHtml = '<h3 id="yeapcp-pcp-page-title">435543453435543 ' . $bao->title . '</h3>';
-    
-    // Inject parent Introductory Message above PCP intro text.	
+
+    // Inject parent Introductory Message above PCP intro text.
     $tpl = CRM_Core_Smarty::singleton();
     $pcp = $tpl->_tpl_vars['pcp'];
     $pcp['intro_text'] = _yeapcp_get_intro_text($parent_page_id) . $pcpTitleHtml . $pcp['intro_text'];
@@ -46,7 +46,7 @@ function yeapcp_civicrm_buildForm($formName, &$form) {
     $form->addRule('page_text', ts('%1 is a required field.', [1 => $pageTextElementLabel]), 'required');
   }
   elseif ($formName == 'CRM_Contribute_Form_Contribution_Main' && !empty($form->_pcpId)) {
-    // Inject parent Introductory Message above PCP intro text.	
+    // Inject parent Introductory Message above PCP intro text.
     $tpl = CRM_Core_Smarty::singleton();
     $intro_text = $tpl->_tpl_vars['intro_text'];
     $intro_text = _yeapcp_get_intro_text($form->_id) . $intro_text;
@@ -174,35 +174,6 @@ function yeapcp_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
   _yeapcp_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }
 
-// --- Functions below this ship commented out. Uncomment as required. ---
-
-/**
- * Implements hook_civicrm_preProcess().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_preProcess
- *
-function yeapcp_civicrm_preProcess($formName, &$form) {
-
-} // */
-
-/**
- * Implements hook_civicrm_navigationMenu().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
- *
-function yeapcp_civicrm_navigationMenu(&$menu) {
-  _yeapcp_civix_insert_navigation_menu($menu, NULL, array(
-    'label' => ts('The Page', array('domain' => 'org.yea.yeapcp')),
-    'name' => 'the_page',
-    'url' => 'civicrm/the-page',
-    'permission' => 'access CiviReport,access CiviContribute',
-    'operator' => 'OR',
-    'separator' => 0,
-  ));
-  _yeapcp_civix_navigationMenu($menu);
-} // */
-
-
 function _yeapcp_get_intro_text($page_id) {
   // Retrieve Introductory Message from parent contribution page. We'll inject
   // this into the PCP page below.
@@ -210,7 +181,7 @@ function _yeapcp_get_intro_text($page_id) {
     'sequential' => 1,
     'return' => "intro_text",
     'id' => $page_id,
-  ));    
+  ));
   $parent_intro_text = $result['values'][0]['intro_text'];
   return $parent_intro_text;
 }
