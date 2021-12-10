@@ -11,3 +11,5 @@ This extension changes behavior of Personal Campaign Pages in the following ways
 * Hide the "Create your own fundraising page" link on child PCP pages.
 * Adjust "N% to our goal" text placement so that it never falls below thermometer
   placement.
+* On the PCP setup form: hide the "Welcome" field, and require the "Your Message"
+  field.
