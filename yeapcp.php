@@ -21,7 +21,7 @@ function yeapcp_civicrm_pageRun(&$page) {
     $bao->find();
     $bao->fetch();
     $parent_page_id = $bao->page_id;
-    $pcpTitleHtml = '<h3 id=yeapcp-pcp-page-title">' . $bao->title . '</h3>';
+    $pcpTitleHtml = '<h3 id="yeapcp-pcp-page-title">435543453435543 ' . $bao->title . '</h3>';
     
     // Inject parent Introductory Message above PCP intro text.	
     $tpl = CRM_Core_Smarty::singleton();
@@ -36,8 +36,16 @@ function yeapcp_civicrm_pageRun(&$page) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_buildForm
  */
-function yeapcp_civicrm_buildForm($formName, $form) {
-  if ($formName == 'CRM_Contribute_Form_Contribution_Main' && !empty($form->_pcpId)) {
+function yeapcp_civicrm_buildForm($formName, &$form) {
+  if ($formName == 'CRM_PCP_Form_Campaign') {
+    // Remove the 'Welcome message' field entirely (per https://app.asana.com/0/241603776072319/1201439840173652)
+    $form->removeElement('pcp_intro_text');
+
+    // Make the 'Your Message' field required (per https://app.asana.com/0/241603776072319/1201439840173652)
+    $pageTextElementLabel = $form->getElement('page_text')->_label;
+    $form->addRule('page_text', ts('%1 is a required field.', [1 => $pageTextElementLabel]), 'required');
+  }
+  elseif ($formName == 'CRM_Contribute_Form_Contribution_Main' && !empty($form->_pcpId)) {
     // Inject parent Introductory Message above PCP intro text.	
     $tpl = CRM_Core_Smarty::singleton();
     $intro_text = $tpl->_tpl_vars['intro_text'];
