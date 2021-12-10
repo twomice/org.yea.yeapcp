@@ -21,12 +21,12 @@ function yeapcp_civicrm_pageRun(&$page) {
     $bao->find();
     $bao->fetch();
     $parent_page_id = $bao->page_id;
-    $pcpTitleHtml = '<h3 id="yeapcp-pcp-page-title">435543453435543 ' . $bao->title . '</h3>';
+    $pcpTitleHtml = '<h3 id="yeapcp-pcp-page-title">' . $bao->title . '</h3>';
 
     // Inject parent Introductory Message above PCP intro text.
     $tpl = CRM_Core_Smarty::singleton();
     $pcp = $tpl->_tpl_vars['pcp'];
-    $pcp['intro_text'] = _yeapcp_get_intro_text($parent_page_id) . $pcpTitleHtml . $pcp['intro_text'];
+    $pcp['intro_text'] = _yeapcp_get_intro_text($parent_page_id) . $pcpTitleHtml;
     $page->assign('pcp', $pcp);
   }
 }
