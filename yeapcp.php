@@ -46,10 +46,8 @@ function yeapcp_civicrm_buildForm($formName, &$form) {
     $form->addRule('page_text', ts('%1 is a required field.', [1 => $pageTextElementLabel]), 'required');
   }
   elseif ($formName == 'CRM_Contribute_Form_Contribution_Main' && !empty($form->_pcpId)) {
-    // Inject parent Introductory Message above PCP intro text.
-    $tpl = CRM_Core_Smarty::singleton();
-    $intro_text = $tpl->_tpl_vars['intro_text'];
-    $intro_text = _yeapcp_get_intro_text($form->_id) . $intro_text;
+    // Replace personal welcome with parent "Intro message" content.
+    $intro_text = _yeapcp_get_intro_text($form->_id);
     $form->assign('intro_text', $intro_text);
   }
 }
